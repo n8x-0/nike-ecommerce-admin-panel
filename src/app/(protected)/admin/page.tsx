@@ -18,38 +18,38 @@ const Admin = () => {
     const verify = async () => {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth`, {
             method: "POST",
-            headers: {"Content-Type" : "application/json"},
-            credentials:"include",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify("verify")
         })
-        if(res.ok){
-            const data =await res.json()
+        if (res.ok) {
+            const data = await res.json()
             console.log(data);
             return
-        }else{
+        } else {
             router.back()
         }
     }
-    
+
     const logout = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true)
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth`, {
                 method: "GET",
-                headers: {"Content-Type": "application/json",},
+                headers: { "Content-Type": "application/json", },
             });
             if (res.ok) {
                 router.push("/")
             }
         } catch (error) {
             console.log(error);
-        }finally{
+        } finally {
             setLoading(false)
         }
     };
-    
-    
+
+
     const getData = async () => {
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/orders`, {
@@ -57,14 +57,15 @@ const Admin = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
+                cache: "no-store"
             });
-            
+
             if (res.status === 401) {
                 console.log("fetch failed 401");
                 setLoading(false);
                 router.push("/");
             }
-            
+
             if (res.ok) {
                 console.log("fetched");
                 const data = await res.json();
@@ -78,16 +79,16 @@ const Admin = () => {
             setLoading(false);
         }
     }
-    
+
     useEffect(() => {
         verify()
         getData();
     }, []);
-    
+
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const term = e.target.value.toLowerCase();
         setSearchTerm(term);
-        
+
         if (orders) {
             const filtered = orders.filter(
                 (order) =>
